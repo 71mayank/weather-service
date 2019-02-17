@@ -80,7 +80,7 @@ public class WeatherServiceImpl implements WeatherService {
 
             weatherExchangeRateResponse.setAveragePressure((double) Math.round(averageForPressure.getAsDouble()) + WeatherConstant.PRESSURE_PASCAL);
 
-            weatherExchangeRateResponse.setResponseMessage(weatherData.getCity().getName() + " Weather Forecast retrieved successfully for next " + WeatherConstant.DAYS + " Days ");
+            weatherExchangeRateResponse.setResponseMessage(weatherData.getCity().getName() + " weather forecast for next " + WeatherConstant.DAYS + " Days ");
             return new ResponseEntity<>(weatherExchangeRateResponse, HttpStatus.OK);
 
         } catch (Exception e) {
