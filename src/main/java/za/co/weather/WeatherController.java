@@ -1,4 +1,4 @@
-package za.co.weather.controller;
+package za.co.weather;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;

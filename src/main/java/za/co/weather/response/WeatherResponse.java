@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class WeatherResponse {
     private String responseMessage;
-    private Float averageTempratureDay;
-    private Float averageTempratureNight;
-    private Double averagePressure;
+    private String averageTempratureDayTime;
+    private String averageTempratureNightTime;
+    private String averagePressure;
 }
