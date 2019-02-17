@@ -1,6 +1,7 @@
 package za.co.weather.constant;
 
 import java.text.SimpleDateFormat;
+
 public class WeatherConstant {
 
     public static final float FTEMP = 273.15F;

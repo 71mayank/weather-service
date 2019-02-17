@@ -4,14 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import za.co.weather.bean.City;
 import za.co.weather.bean.Data;
 import za.co.weather.bean.WeatherData;
 import za.co.weather.constant.WeatherConstant;
 import za.co.weather.response.WeatherResponse;
-import java.text.ParseException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public WeatherResponse getWeatherDetails(String city) {
+    public ResponseEntity<WeatherResponse> getWeatherDetails(String city) {
         WeatherResponse weatherExchangeRateResponse = new WeatherResponse();
         try {
             WeatherData weatherData = restTemplate.getForObject(weatherServiceUrl, WeatherData.class);
@@ -78,14 +79,14 @@ public class WeatherServiceImpl implements WeatherService {
 
             weatherExchangeRateResponse.setAveragePressure((double) Math.round(averageForPressure.getAsDouble()) + WeatherConstant.PRESSURE_PASCAL);
 
-            weatherExchangeRateResponse.setResponseMessage( weatherData.getCity().getName()+ " Weather Forecast retrieved successfully for next "+WeatherConstant.DAYS+" Days ");
+            weatherExchangeRateResponse.setResponseMessage(weatherData.getCity().getName() + " Weather Forecast retrieved successfully for next " + WeatherConstant.DAYS + " Days ");
+            return new ResponseEntity<>(weatherExchangeRateResponse, HttpStatus.OK);
 
-            return weatherExchangeRateResponse;
-
-        } catch (ParseException pe) {
-            weatherExchangeRateResponse.setResponseMessage("Weather forecast failed due to Parsing " + pe.getMessage());
+        } catch (Exception e) {
+            weatherExchangeRateResponse.setResponseMessage("Weather forecast failed due to Parsing " + e.getMessage());
+            weatherExchangeRateResponse = null;
+            return new ResponseEntity<>(weatherExchangeRateResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return weatherExchangeRateResponse;
     }
 
     public OptionalDouble calculateAverageInDouble(List<Double> averageData) {

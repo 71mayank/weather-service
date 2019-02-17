@@ -1,8 +1,7 @@
-package za.co.weather;
+package za.co.weather.controller;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import za.co.weather.response.WeatherResponse;
 import za.co.weather.service.WeatherServiceImpl;
 
-import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -32,8 +30,8 @@ public class WeatherController {
     })
     @GetMapping(value = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WeatherResponse> getLatestRates(@ApiParam(value = "Default City", required = true)
-                                                          @RequestParam(value = "city", defaultValue = "") String city) throws ParseException {
-        return new ResponseEntity<>(weatherServiceImpl.getWeatherDetails(city), HttpStatus.OK);
+                                                          @RequestParam(value = "city", defaultValue = "Altstadt") String city) {
+        return weatherServiceImpl.getWeatherDetails(city);
     }
 
 }
