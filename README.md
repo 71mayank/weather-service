@@ -10,7 +10,7 @@ STEPS TO RUN ON LOCAL
     3. Browse url http://localhost:1010/swagger-ui.html
     4. Hit end point http://localhost:1010/weather/data to view weather forecast
 
-REQUIREMENT Develop REST API
+REQUIREMENT WEATHER FORECAST REST API
 
     1. The API should expose a “/data” endpoint.
     2. The “/data” endpoint must include a CITY parameter containing the city’s name as the
@@ -19,11 +19,11 @@ REQUIREMENT Develop REST API
     4. The API with “/data” endpoint should retrieve the average of pressure for the next 3 days from today’s date.
 
 
-EXTERNAL REFEREBCE
+EXTERNAL REFERENCE
 
     1. Given a dummy external API that gives weather metrics forecast data 5 day / 3 hour.
 
-SOLUTION CONSIDERATIONS
+SOLUTION STEPS
 
     1. Parse weather metrics forecast data 5 day / 3 hour.
     2. Calculate day time average temperature by filtering each day metric between 06:00 - 18:00 for each day up to 3 days.
@@ -45,7 +45,7 @@ EXAMPLE
      averagePressure for Day 1 - Metric to filtered between start date and end date as (start date + 3 days)
         c. 2017-02-16 00:00:00 and 2017-02-19 00:00:00
 
-CALCLUATION STEPS
+CALCULATION STEPS
     
      1. Collect metric for 3 days.
      2. Calculate averageTempratureDayTime
