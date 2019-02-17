@@ -8,6 +8,8 @@ public class WeatherConstant {
     public static final int DAYS = 3;
     public static final String TEMP_DEGREE_CELCIUS = "'C";
     public static final String PRESSURE_PASCAL = " Pascal";
+    public static final int HTTP_REQUEST_CONNECTION_TIME_OUT = 15000 ;
+    public static final int HTTP_REQUEST_READ_TIME_OUT = 15000 ;
     public static SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 

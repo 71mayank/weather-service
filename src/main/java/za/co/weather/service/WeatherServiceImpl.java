@@ -26,7 +26,8 @@ public class WeatherServiceImpl implements WeatherService {
     private final RestTemplate restTemplate;
 
     public WeatherServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+        this.restTemplate = restTemplateBuilder.setConnectTimeout(WeatherConstant.HTTP_REQUEST_CONNECTION_TIME_OUT).setConnectTimeout(
+                WeatherConstant.HTTP_REQUEST_READ_TIME_OUT).build();
     }
 
     @Override
