@@ -12,7 +12,6 @@ import za.co.weather.bean.Data;
 import za.co.weather.bean.WeatherData;
 import za.co.weather.constant.WeatherConstant;
 import za.co.weather.response.WeatherResponse;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,10 +34,11 @@ public class WeatherServiceImpl implements WeatherService {
         WeatherResponse weatherResponse = new WeatherResponse();
         try {
             WeatherData weatherData = restTemplate.getForObject(weatherServiceUrl, WeatherData.class);
+            String startDate = WeatherConstant.DATE_FORMATTER.format(weatherData.getList().stream().map(listItem -> listItem.getDt_txt()).collect(Collectors.toList()).get(0));
+            logger.info("Considering startDate {} ", startDate);
+
             Collection<Data> weatherForDay = new ArrayList<>();
             Collection<Data> weatherForNight = new ArrayList<>();
-            String startDate = WeatherConstant.DATE_FORMATTER.format(weatherData.getList().stream().map(listItem -> listItem.getDt_txt()).collect(Collectors.toList()).get(0));
-            logger.info("Found startDate {} ", startDate);
 
             for (int i = 0; i < WeatherConstant.DAYS; i++) {
                 weatherForDay.addAll(getWeatherBetweenDateTime(
@@ -52,23 +52,25 @@ public class WeatherServiceImpl implements WeatherService {
                         addDays(WeatherConstant.DATE_TIME_FORMATTER.parse(startDate + WeatherConstant.NIGHT_END_TIME), i + 1)));
 
             }
-            logger.info("Day Weather Ended " + weatherForDay.size());
-
-            logger.info("Night Weather Ended " + weatherForNight.size());
+            logger.info("Day Weather Collected {}", weatherForDay.size());
+            logger.info("Night Weather Collected {}", weatherForNight.size());
 
             List<Double> dataForDayTempAverage = weatherForDay.stream().map(data -> data.getMain()).collect(Collectors.toList()).stream().map(main -> main.getTemp()).collect(Collectors.toList());
             OptionalDouble averageDay = calculateAverageInDouble(dataForDayTempAverage);
-            float averageCelsiusFor3Days = (float) averageDay.getAsDouble() - WeatherConstant.FTEMP;
-            logger.info("Celsius: averageCelsiusFor3Days {} ", Math.round(averageCelsiusFor3Days));
-
-            weatherResponse.setAverageTempratureDayTime(Math.round(averageCelsiusFor3Days) + WeatherConstant.TEMP_DEGREE_CELCIUS);
+            if (averageDay.isPresent()){
+                float averageCelsiusFor3Days = (float) averageDay.getAsDouble() - WeatherConstant.FTEMP;
+                weatherResponse.setAverageTempratureDayTime(Math.round(averageCelsiusFor3Days) + WeatherConstant.TEMP_DEGREE_CELCIUS);
+                logger.info("Celsius: averageCelsiusFor3Days {} ", Math.round(averageCelsiusFor3Days));
+            }
 
             List<Double> dataForNightTempAverage = weatherForNight.stream().map(data -> data.getMain()).collect(Collectors.toList()).stream().map(main -> main.getTemp()).collect(Collectors.toList());
             OptionalDouble averageNight = calculateAverageInDouble(dataForNightTempAverage);
-            float averageCelsiusFor3Nights = (float) averageNight.getAsDouble() - WeatherConstant.FTEMP;
-            logger.info("Celsius: averageCelsiusFor3Nights {}  ", Math.round(averageCelsiusFor3Nights));
 
-            weatherResponse.setAverageTempratureNightTime(Math.round(averageCelsiusFor3Nights) + WeatherConstant.TEMP_DEGREE_CELCIUS);
+            if(averageNight.isPresent()) {
+                float averageCelsiusFor3Nights = (float) averageNight.getAsDouble() - WeatherConstant.FTEMP;
+                logger.info("Celsius: averageCelsiusFor3Nights {}  ", Math.round(averageCelsiusFor3Nights));
+                weatherResponse.setAverageTempratureNightTime(Math.round(averageCelsiusFor3Nights) + WeatherConstant.TEMP_DEGREE_CELCIUS);
+            }
 
             Collection<Data> preasureBetweenDateTime = getWeatherBetweenDateTime(
                     weatherData.getList(),
@@ -77,9 +79,12 @@ public class WeatherServiceImpl implements WeatherService {
 
             List<Double> collectedPressure = preasureBetweenDateTime.stream().map(pressureData -> pressureData.getMain().getPressure()).collect(Collectors.toList());
             OptionalDouble averageForPressure = calculateAverageInDouble(collectedPressure);
+            if(averageForPressure.isPresent()) {
+                double presureAverage = Math.round(averageForPressure.getAsDouble());
+                logger.info("Pascal: presureAverage {}  ", Math.round(presureAverage));
+                weatherResponse.setAveragePressure(presureAverage + WeatherConstant.PRESSURE_PASCAL);
 
-            weatherResponse.setAveragePressure((double) Math.round(averageForPressure.getAsDouble()) + WeatherConstant.PRESSURE_PASCAL);
-
+            }
             weatherResponse.setResponseMessage(weatherData.getCity().getName() + " weather forecast for next " + WeatherConstant.DAYS + " Days ");
             return new ResponseEntity<>(weatherResponse, HttpStatus.OK);
 

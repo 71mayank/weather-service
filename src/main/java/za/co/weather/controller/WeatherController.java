@@ -27,15 +27,15 @@ public class WeatherController {
     @Autowired
     WeatherServiceImpl weatherServiceImpl;
 
-    @ApiOperation(value = "View latest weather forecast", response = List.class)
+    @ApiOperation(value = "View weather forecast", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved weather details"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the weather details"),
+            @ApiResponse(code = 200, message = "Successfully retrieved weather forecast"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the weather forecast"),
             @ApiResponse(code = 403, message = "Access to the weather forecast you were trying is forbidden"),
-            @ApiResponse(code = 404, message = "The weather details you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The weather forecast you were trying to check is not found")
     })
     @GetMapping(value = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WeatherResponse> getLatestRates(@ApiParam(value = "Default City", required = true)
+    public ResponseEntity<WeatherResponse> getWeatherForecast(@ApiParam(value = "Default City", required = true)
                                                           @RequestParam(value = "city")
                                                           @NonNull
                                                           @Size(min = 3, max = 50, message = "city length must be between 3 and 50") String city) {

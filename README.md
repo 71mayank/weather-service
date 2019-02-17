@@ -30,6 +30,13 @@ SOLUTION STEPS
     3. Calculate day time average temperature by filtering each day metric between 18:00 - 06:00 for each day up to 3 days.
     4. Calculate average pressure by filtering each day metric between current date and current date+3 days.
 
+MOTIVATION BEHIND THIS SOLUTION
+
+    1. Grouping metric based on day and night interval is simple.
+    2. JDK8 Streams, filter, map and collector are useful while collecting desired metrics.
+    3. Solution is reusing functions.
+    4. Keeping SOLID principles in mind.
+
 EXAMPLE
 
      Start date 2017-02-16
@@ -51,7 +58,7 @@ CALCULATION STEPS
      2. Calculate averageTempratureDayTime
      3. Calculate averageTempratureNightTime
      4. Calculate averagePressure
-     5. Wrap Response in entiry.
+     5. Wrap Weather Response in entity.
      6. Return ResponseEntiry.
 
 
