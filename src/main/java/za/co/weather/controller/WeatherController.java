@@ -41,9 +41,9 @@ public class WeatherController {
                                                           @Size(min = 3, max = 50, message = "city length must be between 3 and 50") String city) {
         if (StringUtils.isEmpty(city)) {
             return new ResponseEntity<>(WeatherResponse.builder().responseMessage("City request parameter is missing").build(), HttpStatus.BAD_REQUEST);
-        } else if (StringUtils.isNumeric(city)) {
-            return new ResponseEntity<>(WeatherResponse.builder().responseMessage("City can not be a number").build(), HttpStatus.BAD_REQUEST);
-        } else {
+        } else if (StringUtils.isNumeric(city) || !StringUtils.isAlpha(city) || !StringUtils.isAlphanumeric(city)) {
+            return new ResponseEntity<>(WeatherResponse.builder().responseMessage("Invalid city").build(), HttpStatus.BAD_REQUEST);
+        }else {
             return weatherServiceImpl.getWeatherDetails(city);
         }
     }
