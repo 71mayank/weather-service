@@ -32,7 +32,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public ResponseEntity<WeatherResponse> getWeatherDetails(String city) {
-        WeatherResponse weatherExchangeRateResponse = new WeatherResponse();
+        WeatherResponse weatherResponse = new WeatherResponse();
         try {
             WeatherData weatherData = restTemplate.getForObject(weatherServiceUrl, WeatherData.class);
             Collection<Data> weatherForDay = new ArrayList<>();
@@ -61,14 +61,14 @@ public class WeatherServiceImpl implements WeatherService {
             float averageCelsiusFor3Days = (float) averageDay.getAsDouble() - WeatherConstant.FTEMP;
             logger.info("Celsius: averageCelsiusFor3Days {} ", Math.round(averageCelsiusFor3Days));
 
-            weatherExchangeRateResponse.setAverageTempratureDayTime(Math.round(averageCelsiusFor3Days) + WeatherConstant.TEMP_DEGREE_CELCIUS);
+            weatherResponse.setAverageTempratureDayTime(Math.round(averageCelsiusFor3Days) + WeatherConstant.TEMP_DEGREE_CELCIUS);
 
             List<Double> dataForNightTempAverage = weatherForNight.stream().map(data -> data.getMain()).collect(Collectors.toList()).stream().map(main -> main.getTemp()).collect(Collectors.toList());
             OptionalDouble averageNight = calculateAverageInDouble(dataForNightTempAverage);
             float averageCelsiusFor3Nights = (float) averageNight.getAsDouble() - WeatherConstant.FTEMP;
             logger.info("Celsius: averageCelsiusFor3Nights {}  ", Math.round(averageCelsiusFor3Nights));
 
-            weatherExchangeRateResponse.setAverageTempratureNightTime(Math.round(averageCelsiusFor3Nights) + WeatherConstant.TEMP_DEGREE_CELCIUS);
+            weatherResponse.setAverageTempratureNightTime(Math.round(averageCelsiusFor3Nights) + WeatherConstant.TEMP_DEGREE_CELCIUS);
 
             Collection<Data> preasureBetweenDateTime = getWeatherBetweenDateTime(
                     weatherData.getList(),
@@ -78,15 +78,15 @@ public class WeatherServiceImpl implements WeatherService {
             List<Double> collectedPressure = preasureBetweenDateTime.stream().map(pressureData -> pressureData.getMain().getPressure()).collect(Collectors.toList());
             OptionalDouble averageForPressure = calculateAverageInDouble(collectedPressure);
 
-            weatherExchangeRateResponse.setAveragePressure((double) Math.round(averageForPressure.getAsDouble()) + WeatherConstant.PRESSURE_PASCAL);
+            weatherResponse.setAveragePressure((double) Math.round(averageForPressure.getAsDouble()) + WeatherConstant.PRESSURE_PASCAL);
 
-            weatherExchangeRateResponse.setResponseMessage(weatherData.getCity().getName() + " weather forecast for next " + WeatherConstant.DAYS + " Days ");
-            return new ResponseEntity<>(weatherExchangeRateResponse, HttpStatus.OK);
+            weatherResponse.setResponseMessage(weatherData.getCity().getName() + " weather forecast for next " + WeatherConstant.DAYS + " Days ");
+            return new ResponseEntity<>(weatherResponse, HttpStatus.OK);
 
         } catch (Exception e) {
-            weatherExchangeRateResponse.setResponseMessage("Weather forecast failed due to Parsing " + e.getMessage());
-            weatherExchangeRateResponse = null;
-            return new ResponseEntity<>(weatherExchangeRateResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            weatherResponse.setResponseMessage("Weather forecast failed due to Parsing " + e.getMessage());
+            weatherResponse = null;
+            return new ResponseEntity<>(weatherResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

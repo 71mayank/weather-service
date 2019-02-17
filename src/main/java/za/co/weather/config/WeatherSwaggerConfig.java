@@ -17,7 +17,7 @@ public class WeatherSwaggerConfig {
 
     private static final String WEATHER_API_BASE_PACKAGE = "za.co.weather.controller";
     private static final String WEATHER_API_TITLE = "Weather Service API";
-    private static final String WEATHER_API_DESCRIPTION = "Weather REST API for Exchange Rates";
+    private static final String WEATHER_API_DESCRIPTION = "Weather forecast REST API";
     private static final String WEATHER_API_VERSION = "1.0";
     private static final String WEATHER_API_TERMS_OF_SERVICE = "Terms of service";
     private static final String WEATHER_API_OWNER_NAME = "Mayank Tantuway";
